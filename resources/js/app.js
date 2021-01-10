@@ -7,11 +7,13 @@ import axios from 'axios';
 import VueRouter from 'vue-router';
 import VueAxios from 'vue-axios';
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
+import Vuelidate from 'vuelidate';
 
 Vue.use(VueRouter);
 Vue.use(VueAxios, axios);
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
+Vue.use(Vuelidate)
 
 import App from './App.vue';
 

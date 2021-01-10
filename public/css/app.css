@@ -14313,4 +14313,9 @@ input[type=color].form-control:disabled {
   vertical-align: text-bottom;
 }
 
+.required:after {
+  content: " *" !important;
+  color: red !important;
+}
+
 

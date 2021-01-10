@@ -9,3 +9,8 @@
 
 // Import Bootstrap an BootstrapVue CSS files (order is important)
 @import '~bootstrap-vue/src/index.scss';
+
+.required:after {
+    content:" *" !important;
+    color: red !important;
+}

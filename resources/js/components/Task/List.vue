@@ -1,24 +1,20 @@
 <template>
   <div>
-    <div>
       <b-button
         variant="primary"
         v-b-modal.new-task-modal
         class="float-right mb-3"
         >Nova tarefa</b-button
       >
-      <b-modal id="new-task-modal" title="Cadastrar tarefa">
-        <TaskForm></TaskForm>
-      </b-modal>
-    </div>
+    <TaskFormModal></TaskFormModal>
     <b-table striped hover :items="items"></b-table>
   </div>
 </template>
 
 <script>
-import TaskForm from './Form';
+import TaskFormModal from './Form';
 export default {
-	components: {TaskForm},
+	components: {TaskFormModal},
 	data() {
 		return {
 			items: [

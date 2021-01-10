@@ -8,18 +8,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Task extends Model
 {
-    use HasFactory, SoftDeletes;
+	use HasFactory, SoftDeletes;
 
-    protected $table = 'tasks';
+	protected $table = 'tasks';
 
-    protected $fillable = [
+	protected $fillable = [
 		'cod',
 		'title',
 		'description',
 		'status'
-    ];
+	];
 
-    const STATUS_ACTIVE = 1;
+	const STATUS_ACTIVE = 1;
 	const STATUS_DONE = 2;
-    
 }

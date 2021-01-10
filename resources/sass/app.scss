@@ -6,3 +6,6 @@
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+
+// Import Bootstrap an BootstrapVue CSS files (order is important)
+@import '~bootstrap-vue/src/index.scss';

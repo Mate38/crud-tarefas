@@ -23,6 +23,15 @@ Auth::routes();
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::group(['middleware' => ['auth']], function () {
+
+    Route::prefix('api')->name('api.')->group(function () {
+        Route::get('/tasks', 'TaskController@list')->name('tasks');
+        Route::post('/task/save/{task?}', 'TaskController@save')->name('task.save');
+        Route::get('/task/{task}', 'TaskController@task')->name('task');
+        Route::post('/task/conclude/{task}', 'TaskController@conclude')->name('task.conclude');
+        Route::post('/task/archive/{task}', 'TaskController@archive')->name('task.archive');
+    });
+
     Route::get('{any}', function () {
         return view('app');
     })->where('any', '.*');

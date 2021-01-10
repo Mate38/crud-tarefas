@@ -24,6 +24,8 @@ const router = new VueRouter({
     routes: routes
 });
 
+require('./mixins/global');
+
 const app = new Vue({
     el: '#app',
     router: router,

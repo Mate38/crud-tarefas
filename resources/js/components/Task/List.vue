@@ -1,13 +1,51 @@
 <template>
   <div>
-      <b-button
-        variant="primary"
-        v-b-modal.new-task-modal
-        class="float-right mb-3"
-        >Nova tarefa</b-button
-      >
-    <TaskFormModal></TaskFormModal>
-    <b-table striped hover :items="items"></b-table>
+	<b-button
+		variant="primary"
+		v-b-modal.new-task-modal
+		class="float-right mb-3"
+		>Nova tarefa
+	</b-button>
+
+    <TaskFormModal
+		@reloadTable="getTasks"
+		@setTaskId="setTaskId"
+		:taskId="taskId"
+	></TaskFormModal>
+
+    <b-table striped hover :items="items" :fields="fields" :busy="loading">
+		<template #table-busy>
+			<div class="text-center my-2">
+				<b-spinner class="align-middle"></b-spinner>
+				<strong>Carregando...</strong>
+			</div>
+      	</template>
+		<template #cell(actions)="data">
+			<b-button
+				@click="concludeTask(data.item.id)"
+				variant="success"
+				class="btn-sm"
+				title="Concluir"
+				><i class="fas fa-check"></i>
+			</b-button>
+			<b-button
+				@click="setTaskId(data.item.id)"
+				variant="primary"
+				v-b-modal.new-task-modal
+				class="btn-sm"
+				title="Editar"
+				><i class="far fa-edit"></i>
+			</b-button>
+			<b-button
+				@click="archiveTask(data.item.id)"
+				variant="warning"
+				class="btn-sm"
+				title="Arquivar"
+				><i class="fas fa-archive"></i>
+			</b-button>
+		</template>
+	</b-table>
+
   </div>
 </template>
 
@@ -17,16 +55,107 @@ export default {
 	components: {TaskFormModal},
 	data() {
 		return {
-			items: [
-				{ age: 40, first_name: "Dickerson", last_name: "Macdonald" },
-				{ age: 21, first_name: "Larsen", last_name: "Shaw" },
-				{ age: 89, first_name: "Geneva", last_name: "Wilson" },
-				{ age: 38, first_name: "Jami", last_name: "Carney" },
+			fields: [
+				{
+					key: 'cod', 
+					label: 'Código'
+				},
+				{
+					key: 'title', 
+					label: 'Título', 
+					sortable: true
+				},
+				{
+					key: 'description',
+					label: 'Descrição'
+				},
+				{
+					key: 'created', 
+					label: 'Data de cadastro'
+				},
+				{
+					key: 'status',
+					label: 'Situação'
+				},
+				{
+					key: 'actions',
+					label: 'Ações',
+					tdClass: 'no_wrap'
+				}, 
 			],
+			items: [],
+			taskId: null,
+			loading: false
 		};
 	},
+	mounted() {
+		this.getTasks();
+	},
+	methods: {
+		getTasks() {
+			this.loading = true;
+			axios.get('/api/tasks')
+				.then(res => {
+					this.items = res.data.data;
+					this.loading = false;
+				}).catch(err => {
+					this.makeToast('Erro!', 'Houve um problema ao tentar carregar os dados!', 'danger');
+					this.loading = false;
+				})
+		},
+		setTaskId(id) {
+			this.taskId = id;
+		},
+		concludeTask(id) {
+			this.$bvModal.msgBoxConfirm('Deseja mesmo concluir esta tarefa?', {
+				title: 'Confirme antes de prosseguir',
+				size: 'sm',
+				buttonSize: 'sm',
+				okVariant: 'success',
+				okTitle: 'Confirmar',
+				cancelTitle: 'Cancelar',
+				footerClass: 'p-2',
+				hideHeaderClose: false,
+				centered: true
+			})
+			.then(value => {
+				axios.post('/api/task/conclude/'+id)
+					.then(res => {
+						this.getTasks();
+						this.makeToast('Sucesso!', 'Dados salvos com sucesso!', 'success');
+					}).catch(err => {
+						this.makeToast('Erro! '+err.response.status, err.response.data.message, 'danger');
+					})
+			})
+		},
+		archiveTask(id) {
+			this.$bvModal.msgBoxConfirm('Deseja mesmo arquivar esta tarefa?', {
+				title: 'Confirme antes de prosseguir',
+				size: 'sm',
+				buttonSize: 'sm',
+				okVariant: 'warning',
+				okTitle: 'Confirmar',
+				cancelTitle: 'Cancelar',
+				footerClass: 'p-2',
+				hideHeaderClose: false,
+				centered: true
+			})
+			.then(value => {
+				axios.post('/api/task/archive/'+id)
+					.then(res => {
+						this.getTasks();
+						this.makeToast('Sucesso!', 'Dados salvos com sucesso!', 'success');
+					}).catch(err => {
+						this.makeToast('Erro! '+err.response.status, err.response.data.message, 'danger');
+					})
+			})
+		}
+	}
 };
 </script>
 
 <style>
+	.no_wrap {
+		white-space: nowrap;
+	}
 </style>

@@ -8,14 +8,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Tag extends Model
 {
-    use HasFactory, SoftDeletes;
+	use HasFactory, SoftDeletes;
 
-    protected $table = 'tags';
+	protected $table = 'tags';
 
-    protected $fillable = [
+	protected $fillable = [
 		'cod',
 		'title',
 		'description'
-    ];
-    
+	];
+
 }

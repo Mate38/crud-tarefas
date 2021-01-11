@@ -25,7 +25,7 @@ Auth::routes();
 Route::group(['middleware' => ['auth']], function () {
 
     Route::prefix('api')->name('api.')->group(function () {
-        Route::get('/tasks', 'TaskController@list')->name('tasks');
+        Route::post('/tasks', 'TaskController@list')->name('tasks');
         Route::post('/task/save/{task?}', 'TaskController@save')->name('task.save');
         Route::get('/task/{task}', 'TaskController@task')->name('task');
         Route::post('/task/conclude/{task}', 'TaskController@conclude')->name('task.conclude');

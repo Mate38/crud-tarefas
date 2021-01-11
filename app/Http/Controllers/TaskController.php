@@ -3,15 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use Illuminate\Http\Request;
 use App\Services\Task\SaveTask;
 use App\Http\Requests\TaskRequest;
 use App\Http\Resources\TaskResource;
 
 class TaskController extends Controller
 {
-    public function list()
+    public function list(Request $request)
     {
-        $tasks = Task::createdToday()->get();
+        $filters = $request->all();
+
+        if(!empty($filters)) {
+            $tasks = Task::filters($filters)->get();
+        } else {
+            $tasks = Task::createdToday()->get();
+        }
+
         return TaskResource::collection($tasks);
     }
 

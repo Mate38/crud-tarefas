@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -41,5 +42,26 @@ class Task extends Model
 
 	public function scopeCreatedToday($query) {
 		return $query->whereRaw('Date(created_at) = CURDATE()');
+	}
+
+	public function scopeFilters($query, $filters) {
+
+		if($cod = data_get($filters, 'cod')) {
+			$query->where('cod', 'LIKE', '%'. $cod .'%');
+		}
+
+		if($title = data_get($filters, 'title')) {
+			$query->where('title', 'LIKE', '%'. $title .'%');
+		}
+
+		if($created = data_get($filters, 'created')) {
+			$query->whereDate('created_at', $created);
+		}
+
+		if($status = data_get($filters, 'status')) {
+			$query->where('status', $status);
+		}
+
+		return $query;
 	}
 }

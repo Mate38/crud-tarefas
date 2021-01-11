@@ -1,11 +1,34 @@
 <template>
   <div>
-	<b-button
-		variant="primary"
-		v-b-modal.new-task-modal
-		class="float-right mb-3"
-		>Nova tarefa
-	</b-button>
+
+	<div class="row mb-3">
+		<div class="col-md-12">
+			<b-button
+				variant="primary"
+				v-b-modal.new-task-modal
+				class="float-right ml-2"
+				><i class="fas fa-plus"></i> Nova tarefa
+			</b-button>
+			<b-button 
+				variant="outline-primary"
+				v-b-toggle.filters-collapse
+				class="float-right"
+				><i class="fas fa-filter"></i> Filtros
+			</b-button>
+		</div>
+	</div>
+		
+	<div class="row">
+		<div class="col-md-12">
+			<b-collapse id="filters-collapse" class="mb-3">
+				<b-card>
+					<TaskFilters
+						@filter="getTasks"
+					></TaskFilters>
+				</b-card>
+			</b-collapse>
+		</div>
+	</div>
 
     <TaskFormModal
 		@reloadTable="getTasks"
@@ -33,9 +56,9 @@
 		<template #cell(title_custom)="data">
 			<span :class="getTdClassByStatus(data.item.status)">{{data.item.title}}</span>
         </template>
-		<template #cell(description_custom)="data">
+		<!-- <template #cell(description_custom)="data">
 			<span :class="getTdClassByStatus(data.item.status)">{{data.item.description}}</span>
-        </template>
+        </template> -->
 		<template #cell(status_custom)="data">
 			<span>{{getStatusText(data.item.status)}}</span>
         </template>
@@ -77,8 +100,9 @@
 
 <script>
 import TaskFormModal from './Form';
+import TaskFilters from './Filters';
 export default {
-	components: {TaskFormModal},
+	components: {TaskFormModal, TaskFilters},
 	data() {
 		return {
 			currentPage: 1,
@@ -92,10 +116,10 @@ export default {
 					key: 'title_custom', 
 					label: 'Título'
 				},
-				{
-					key: 'description_custom',
-					label: 'Descrição'
-				},
+				// {
+				// 	key: 'description_custom',
+				// 	label: 'Descrição'
+				// },
 				{
 					key: 'created', 
 					label: 'Data de cadastro'
@@ -117,16 +141,16 @@ export default {
 	},
 	computed: {
 		rows() {
-			return this.items.length
+			return this.items.length;
 		}
     },
 	mounted() {
 		this.getTasks();
 	},
 	methods: {
-		getTasks() {
+		getTasks(filters = []) {
 			this.loading = true;
-			axios.get('/api/tasks')
+			axios.post('/api/tasks', filters)
 				.then(res => {
 					this.items = res.data.data;
 					this.loading = false;

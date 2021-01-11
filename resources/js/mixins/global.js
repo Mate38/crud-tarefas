@@ -6,6 +6,11 @@ Vue.mixin({
 			  variant: variant,
 			  solid: true
 			})
+		},
+		todayAsDatepickerFormat() {
+			const now = new Date().toLocaleDateString();
+			date = now.split(/\D/);
+    		return date.reverse().join('-');
 		}
 	}
 })

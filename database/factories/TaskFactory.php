@@ -24,7 +24,7 @@ class TaskFactory extends Factory
         return [
             'cod' => $this->faker->unique()->randomNumber($nbDigits = NULL, $strict = false),
             'title' => $this->faker->sentence($nbWords = 3, $variableNbWords = true),
-            'description' => $this->faker->sentence($nbWords = 10, $variableNbWords = true)
+            'description' => $this->faker->sentence($nbWords = 6, $variableNbWords = true)
         ];
     }
 }

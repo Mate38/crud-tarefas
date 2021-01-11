@@ -11,6 +11,7 @@
 					<b-form-input
 						id="task_cod"
 						v-model="form.cod"
+						placeholder="Digite todo ou parte do código"
 					></b-form-input>
 				</b-form-group>
 			</div>
@@ -24,6 +25,7 @@
 					<b-form-input
 						id="task_title"
 						v-model="form.title"
+						placeholder="Digite todo ou parte do título"
 					></b-form-input>
 				</b-form-group>
 			</div>
@@ -38,6 +40,7 @@
 						id="task_created"
 						v-model="form.created"
 						:date-format-options="{ day: 'numeric', month: 'numeric', year: 'numeric' }"
+						placeholder="Nenhuma data selecionada"
 						locale="pt-BR"
 					></b-form-datepicker>
 				</b-form-group>
@@ -84,9 +87,10 @@ const initialState = () => {
             cod: "",
             title: "",
             created: "",
-            status: "",
+            status: null,
 		},
 		statusOptions: [
+			{ value: null, text: 'Selecione um status' },
 			{ value: 1, text: 'Ativa' },
 			{ value: 2, text: 'Concluída' },
 			{ value: 3, text: 'Arquivada' },

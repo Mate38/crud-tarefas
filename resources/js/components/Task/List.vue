@@ -13,7 +13,17 @@
 		:taskId="taskId"
 	></TaskFormModal>
 
-    <b-table striped hover :items="items" :fields="fields" :busy="loading">
+    <b-table 
+		id="tasks-table" 
+		striped 
+		hover 
+		:items="items" 
+		:fields="fields" 
+		:busy="loading"
+		:per-page="perPage"
+		:current-page="currentPage"
+		small
+	>
 		<template #table-busy>
 			<div class="text-center my-2">
 				<b-spinner class="align-middle"></b-spinner>
@@ -46,6 +56,13 @@
 		</template>
 	</b-table>
 
+	<b-pagination
+		v-model="currentPage"
+		:total-rows="rows"
+		:per-page="perPage"
+      	aria-controls="tasks-table"
+    ></b-pagination>
+
   </div>
 </template>
 
@@ -55,6 +72,8 @@ export default {
 	components: {TaskFormModal},
 	data() {
 		return {
+			currentPage: 1,
+			perPage: 10,
 			fields: [
 				{
 					key: 'cod', 
@@ -88,6 +107,11 @@ export default {
 			loading: false
 		};
 	},
+	computed: {
+		rows() {
+			return this.items.length
+		}
+    },
 	mounted() {
 		this.getTasks();
 	},

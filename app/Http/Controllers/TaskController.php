@@ -11,7 +11,7 @@ class TaskController extends Controller
 {
     public function list()
     {
-        $tasks = Task::statusActive()->createdToday()->get();
+        $tasks = Task::createdToday()->get();
         return TaskResource::collection($tasks);
     }
 

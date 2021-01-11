@@ -27,19 +27,6 @@ class Task extends Model
 	const STATUS_CONCLUDED = 2;
 	const STATUS_ARCHIVED = 3;
 
-	public function getStatusAttribute($value) {
-		switch ($value) {
-			case self::STATUS_ACTIVE:
-				return 'Ativa';
-			case self::STATUS_CONCLUDED:
-				return 'Concluída';
-			case self::STATUS_ARCHIVED:
-				return 'Arquivada';
-			default:
-				return '';
-		}
-	}
-
 	public function scopeStatusActive($query) {
 		return $query->where('status', self::STATUS_ACTIVE);
 	}

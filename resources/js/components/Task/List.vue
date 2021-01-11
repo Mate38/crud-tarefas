@@ -30,6 +30,15 @@
 				<strong>Carregando...</strong>
 			</div>
       	</template>
+		<template #cell(title_custom)="data">
+			<span :class="getTdClassByStatus(data.item.status)">{{data.item.title}}</span>
+        </template>
+		<template #cell(description_custom)="data">
+			<span :class="getTdClassByStatus(data.item.status)">{{data.item.description}}</span>
+        </template>
+		<template #cell(status_custom)="data">
+			<span>{{getStatusText(data.item.status)}}</span>
+        </template>
 		<template #cell(actions)="data">
 			<b-button
 				@click="concludeTask(data.item.id)"
@@ -80,12 +89,11 @@ export default {
 					label: 'Código'
 				},
 				{
-					key: 'title', 
-					label: 'Título', 
-					sortable: true
+					key: 'title_custom', 
+					label: 'Título'
 				},
 				{
-					key: 'description',
+					key: 'description_custom',
 					label: 'Descrição'
 				},
 				{
@@ -93,7 +101,7 @@ export default {
 					label: 'Data de cadastro'
 				},
 				{
-					key: 'status',
+					key: 'status_custom',
 					label: 'Situação'
 				},
 				{
@@ -173,6 +181,28 @@ export default {
 						this.makeToast('Erro! '+err.response.status, err.response.data.message, 'danger');
 					})
 			})
+		},
+		getTdClassByStatus(status) {
+			switch(status) {
+				case 2:
+					return 'line_through';
+				case 3:
+					return 'dark_gray';
+				default:
+					return '';
+			}
+		},
+		getStatusText(status) {
+			switch (status) {
+				case 1:
+					return 'Ativa';
+				case 2:
+					return 'Concluída';
+				case 3:
+					return 'Arquivada';
+				default:
+					return '';
+			}
 		}
 	}
 };
@@ -181,5 +211,11 @@ export default {
 <style>
 	.no_wrap {
 		white-space: nowrap;
+	}
+	.line_through {
+		text-decoration: line-through;
+	}
+	.dark_gray {
+		color: darkgray;
 	}
 </style>

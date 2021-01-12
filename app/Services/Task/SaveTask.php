@@ -24,7 +24,9 @@ class SaveTask
 				$this->task->fill($this->formData);
 				$this->task->save();
 				
-				$this->task->tags()->sync($this->formData['tags']);
+				if($tags = data_get($this->formData, 'tags')) {
+					$this->task->tags()->sync($tags);
+				}
 				
 			DB::commit();
 		} catch(\Exception $e) {

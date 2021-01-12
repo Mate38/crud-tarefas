@@ -23,7 +23,6 @@ class CreateTaskTagsTable extends Migration
 
             $table->primary(['task_id', 'tag_id']);
 
-            $table->softDeletes();
         });
     }
 

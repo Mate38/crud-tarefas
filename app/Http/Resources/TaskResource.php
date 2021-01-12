@@ -20,9 +20,16 @@ class TaskResource extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
             'status' => $this->status,
-            'created' => $this->created_at->format('d/m/Y')
+            'created' => $this->created_at->format('d/m/Y'),
+            'tags' => $this->getTags($this->tags)
         ];
         
         // return parent::toArray($request);
+    }
+
+    private function getTags($tags) {
+        return $tags->pluck('title','id')->map(function($title, $id) {
+                    return ['value' => $id, 'text' => $title];
+                })->all();
     }
 }

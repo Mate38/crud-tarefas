@@ -18,4 +18,13 @@ class Tag extends Model
 		'description'
 	];
 
+	protected $dates = [
+		'created_at'
+	];
+
+	public function tasks()
+    {
+        return $this->belongsToMany(Task::class, TaskTag::getTableName());
+    }
+
 }

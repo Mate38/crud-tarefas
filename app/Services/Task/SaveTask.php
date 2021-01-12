@@ -23,7 +23,9 @@ class SaveTask
 
 				$this->task->fill($this->formData);
 				$this->task->save();
-
+				
+				$this->task->tags()->sync($this->formData['tags']);
+				
 			DB::commit();
 		} catch(\Exception $e) {
 			DB::rollBack();

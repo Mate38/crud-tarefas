@@ -32,6 +32,7 @@ class TaskController extends Controller
 
     public function task(Task $task)
     {
+        $task->load('tags');
         return new TaskResource($task);
     }
 

@@ -23,11 +23,16 @@ class TaskRequest extends FormRequest
      */
     public function rules()
     {
+        $codRules = ['required', 'max:20', 'min:3'];
+        if(!$this->task || $this->cod != $this->task->cod) {
+            array_push($codRules, 'unique:tasks');
+        };
+
         return [
-            'cod' => ['required', 'unique:tasks', 'max:20', 'min:3'],
+            'cod' => $codRules,
             'title' => ['required', 'max:50', 'min:3'],
             'description' => ['max:100'],
-        ];
+        ];;
     }
 
     public function messages() {   

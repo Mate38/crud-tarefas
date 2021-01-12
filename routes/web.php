@@ -25,11 +25,24 @@ Auth::routes();
 Route::group(['middleware' => ['auth']], function () {
 
     Route::prefix('api')->name('api.')->group(function () {
-        Route::post('/tasks', 'TaskController@list')->name('tasks');
-        Route::post('/task/save/{task?}', 'TaskController@save')->name('task.save');
-        Route::get('/task/{task}', 'TaskController@task')->name('task');
-        Route::post('/task/conclude/{task}', 'TaskController@conclude')->name('task.conclude');
-        Route::post('/task/archive/{task}', 'TaskController@archive')->name('task.archive');
+
+        Route::prefix('task')->name('task.')->group(function () {
+            Route::post('/list', 'TaskController@list')->name('list');
+            Route::post('/save/{task?}', 'TaskController@save')->name('save');
+            Route::post('/conclude/{task}', 'TaskController@conclude')->name('conclude');
+            Route::post('/archive/{task}', 'TaskController@archive')->name('archive');
+            
+            Route::get('/{task}', 'TaskController@task')->name('task');
+        });
+
+        Route::prefix('tag')->name('tag.')->group(function () {
+            Route::post('/list', 'TagController@list')->name('list');
+            Route::post('/save/{tag?}', 'TagController@save')->name('save');
+            Route::get('/options', 'TagController@options')->name('options');
+
+            Route::get('/{tag}', 'TagController@tag')->name('tag');
+        });
+
     });
 
     Route::get('{any}', function () {

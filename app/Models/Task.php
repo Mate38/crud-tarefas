@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
+use App\Models\TaskTag;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -23,6 +23,11 @@ class Task extends Model
 	protected $dates = [
 		'created_at'
 	];
+
+	public function tags()
+    {
+        return $this->belongsToMany(Tag::class, TaskTag::getTableName());
+    }
 
 	const STATUS_ACTIVE = 1;
 	const STATUS_CONCLUDED = 2;

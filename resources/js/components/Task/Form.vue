@@ -51,12 +51,60 @@
                     rows="3"
                 ></b-form-textarea>
             </b-form-group>
+
+            <div class="row">
+                <div class="col-5">
+                    <b-form-group
+                        id="task_tags_group"
+                        label="Categorias"
+                        label-for="task_tags_status"
+                    >
+                        <b-form-select
+                            id="task_tags"
+                            v-model="selectTags"
+                            :options="tagsOptions"
+                            multiple
+                        ></b-form-select>
+                    </b-form-group>
+                </div>
+                <div class="col-2" >
+                    <div class="row btn_select_tag">
+                        <b-button
+                            @click="selectTagsMethod"
+                            variant="outline-primary"
+                            ><i class="fas fa-arrow-right"></i>
+                        </b-button>
+                    </div>
+                    <div class="row btn_deselect_tag">
+                        <b-button
+                            @click="deselectTagsMethod"
+                            variant="outline-primary"
+                            ><i class="fas fa-arrow-left"></i>
+                        </b-button>
+                    </div>
+                </div>
+                <div class="col-5">
+                    <b-form-group
+                        id="task_tags_group"
+                        label="Selecionadas"
+                        label-for="task_tags_status"
+                    >
+                        <b-form-select
+                            id="task_tags"
+                            v-model="deselectTags"
+                            :options="selectedTagsOptions"
+                            multiple
+                        ></b-form-select>
+                    </b-form-group>
+                </div> 
+            </div>
+
         </b-form>
     </b-modal>
 </template>
 
 <script>
-import { required } from "vuelidate/lib/validators";
+import { required, minLength, maxLength } from "vuelidate/lib/validators";
 
 const initialState = () => {
     return {
@@ -64,8 +112,13 @@ const initialState = () => {
             cod: "",
             title: "",
             description: "",
+            tags: []
         },
         loading: false,
+        tagsOptions: [],
+        selectedTagsOptions: [],
+        selectTags: [],
+        deselectTags: []
     };
 };
 
@@ -81,12 +134,18 @@ export default {
     validations: {
         form: {
             cod: {
-                required,
+				required,
+				minLength: minLength(3),
+				maxLength: maxLength(20),
             },
             title: {
-                required,
+				required,
+				minLength: minLength(3),
+				maxLength: maxLength(50),
             },
-            description: {}
+            description: {
+				maxLength: maxLength(100),
+			}
         },
     },
     methods: {
@@ -97,6 +156,7 @@ export default {
         resetModal() {
             Object.assign(this.$data, initialState());
             this.$v.$reset();
+            this.getTagsOptions();
             if(this.taskId) {
                 this.getTask(this.taskId);
             }
@@ -123,6 +183,10 @@ export default {
                 url += '/'+this.taskId;
             }
 
+            this.form.tags = this.selectedTagsOptions.map(tag => {
+                return tag.value;
+            })
+
             axios.post(url, this.form)
                 .then(res => {
                     this.$emit('reloadTable');
@@ -140,11 +204,56 @@ export default {
                     this.form.cod = taskData.cod;
                     this.form.title = taskData.title;
                     this.form.description = taskData.description;
+
+                    this.selectTags = taskData.tags.map(tag => {
+                        return tag.value;
+                    });
+                    this.selectTagsMethod();
+
                     this.loading = false;
 				}).catch(err => {
 					this.makeToast('Erro!', 'Houve um problema ao tentar carregar os dados!', 'danger');
 				})
+        },
+        async getTagsOptions() {
+            await axios.get('/api/tag/options')
+				.then(res => {
+                    this.tagsOptions = res.data.data;
+
+                    if(this.taskId) {
+
+                    }
+				}).catch(err => {
+					this.makeToast('Erro!', 'Houve um problema ao tentar retornar as categorias', 'danger');
+				})
+        },
+        selectTagsMethod() {
+            this.selectedTagsOptions.push(...this.tagsOptions.filter(tag => {
+                return this.selectTags.includes(tag.value);
+            }))
+            this.tagsOptions = this.tagsOptions.filter(tag => {
+                return !this.selectTags.includes(tag.value);
+            })
+        },
+        deselectTagsMethod() {
+            this.tagsOptions.push(...this.selectedTagsOptions.filter(tag => {
+                return this.deselectTags.includes(tag.value);
+            }))
+            this.selectedTagsOptions = this.selectedTagsOptions.filter(tag => {
+                return !this.deselectTags.includes(tag.value);
+            })
         }
     },
 };
 </script>
+
+<style scoped>
+    .btn_select_tag {
+        padding-top: 35px;
+        justify-content: space-around;
+    }
+    .btn_deselect_tag {
+        padding-top: 15px;
+        justify-content: space-around;
+    }
+</style>

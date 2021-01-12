@@ -150,7 +150,7 @@ export default {
 	methods: {
 		getTasks(filters = []) {
 			this.loading = true;
-			axios.post('/api/tasks', filters)
+			axios.post('/api/task/list', filters)
 				.then(res => {
 					this.items = res.data.data;
 					this.loading = false;

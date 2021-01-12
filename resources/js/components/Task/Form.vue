@@ -55,12 +55,12 @@
             <div class="row">
                 <div class="col-5">
                     <b-form-group
-                        id="task_tags_group"
+                        id="task_tags_select_group"
                         label="Categorias"
-                        label-for="task_tags_status"
+                        label-for="task_tags_select"
                     >
                         <b-form-select
-                            id="task_tags"
+                            id="task_tags_select"
                             v-model="selectTags"
                             :options="tagsOptions"
                             multiple
@@ -85,12 +85,12 @@
                 </div>
                 <div class="col-5">
                     <b-form-group
-                        id="task_tags_group"
+                        id="task_tags_deselect_group"
                         label="Selecionadas"
-                        label-for="task_tags_status"
+                        label-for="task_tags_deselect"
                     >
                         <b-form-select
-                            id="task_tags"
+                            id="task_tags_deselect"
                             v-model="deselectTags"
                             :options="selectedTagsOptions"
                             multiple
@@ -219,10 +219,6 @@ export default {
             await axios.get('/api/tag/options')
 				.then(res => {
                     this.tagsOptions = res.data.data;
-
-                    if(this.taskId) {
-
-                    }
 				}).catch(err => {
 					this.makeToast('Erro!', 'Houve um problema ao tentar retornar as categorias', 'danger');
 				})

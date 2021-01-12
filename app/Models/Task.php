@@ -67,6 +67,12 @@ class Task extends Model
 			$query->where('status', $status);
 		}
 
+		if($tags = data_get($filters, 'tags')) {
+			$query->whereHas('tags', function($q) use ($tags) {
+				$q->whereIn('id', $tags);
+			});
+		}
+
 		return $query;
 	}
 }

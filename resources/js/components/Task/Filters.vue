@@ -60,6 +60,22 @@
 				</b-form-group>
 			</div>
 		</div>
+		<div class="row">
+			<div class="col-md-3">
+				<b-form-group
+					id="task_tags_group"
+					label="Categorias"
+					label-for="task_tags"
+				>
+					<b-form-select
+						id="task_tags"
+						v-model="form.tags"
+						:options="tagsOptions"
+						multiple
+					></b-form-select>
+				</b-form-group>
+			</div>
+		</div>
 		<hr>
 		<div class="row">
 			<div class="col-md-12">
@@ -88,13 +104,15 @@ const initialState = () => {
             title: "",
             created: "",
             status: null,
+			tags: []
 		},
 		statusOptions: [
 			{ value: null, text: 'Selecione um status' },
 			{ value: 1, text: 'Ativa' },
 			{ value: 2, text: 'Concluída' },
 			{ value: 3, text: 'Arquivada' },
-		]
+		],
+		tagsOptions: []
     };
 };
 
@@ -104,10 +122,19 @@ export default {
 	},
 	mounted() {
 		this.form.created = this.todayAsDatepickerFormat();
+		this.getTagsOptions();
 	},
     methods: {
 		cleanFilters() {
-            Object.assign(this.$data, initialState());
+            Object.assign(this.form, initialState().form);
+		},
+		getTagsOptions() {
+            axios.get('/api/tag/options')
+				.then(res => {
+                    this.tagsOptions = res.data.data;
+				}).catch(err => {
+					this.makeToast('Erro!', 'Houve um problema ao tentar retornar as categorias', 'danger');
+				})
         },
     },
 };

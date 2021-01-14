@@ -96,5 +96,13 @@ class TaskTest extends TestCase
 
         $this->actingAs($user)->get($route)->assertStatus(200);
     }
+
+    public function test_active()
+    {
+        $route = '/api/task/active/1';
+        $user = User::setFakeUser();
+
+        $this->actingAs($user)->get($route)->assertStatus(200);
+    }
     
 }

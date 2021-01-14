@@ -25,4 +25,12 @@
     .bg-light {
         background-color: #eae9e9 !important;
     }
+    .nav-link:hover {
+        background-color: #efefef;
+        border-radius: 15%;
+    }
+    .router-link-active {
+        background-color: #efefef;
+        border-radius: 15%;
+    }
 </style>

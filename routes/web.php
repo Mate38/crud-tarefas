@@ -14,9 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 Auth::routes();
 
@@ -31,6 +31,7 @@ Route::group(['middleware' => ['auth']], function () {
             Route::post('/save/{task?}', 'TaskController@save')->name('save');
             Route::post('/conclude/{task}', 'TaskController@conclude')->name('conclude');
             Route::post('/archive/{task}', 'TaskController@archive')->name('archive');
+            Route::post('/active/{task}', 'TaskController@active')->name('active');
             
             Route::get('/{task}', 'TaskController@task')->name('task');
         });

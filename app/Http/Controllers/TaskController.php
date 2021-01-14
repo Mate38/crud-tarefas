@@ -49,4 +49,11 @@ class TaskController extends Controller
         $saveTask = new SaveTask($formData, $task);
         return response()->json($saveTask->handle());
     }
+
+    public function active(Task $task)
+    {
+        $formData = ['status' => Task::STATUS_ACTIVE];
+        $saveTask = new SaveTask($formData, $task);
+        return response()->json($saveTask->handle());
+    }
 }

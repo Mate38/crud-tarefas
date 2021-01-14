@@ -53,17 +53,24 @@
 				<strong>Carregando...</strong>
 			</div>
       	</template>
+		<template #cell(cod_custom)="data">
+			<span :class="getTdClassByStatus(data.item.status)">{{data.item.cod}}</span>
+        </template>
 		<template #cell(title_custom)="data">
 			<span :class="getTdClassByStatus(data.item.status)">{{data.item.title}}</span>
         </template>
 		<!-- <template #cell(description_custom)="data">
 			<span :class="getTdClassByStatus(data.item.status)">{{data.item.description}}</span>
         </template> -->
+		<template #cell(created_custom)="data">
+			<span :class="getTdClassByStatus(data.item.status)">{{data.item.created}}</span>
+        </template>
 		<template #cell(status_custom)="data">
-			<span>{{getStatusText(data.item.status)}}</span>
+			<span class="badge badge-pill text-uppercase" :class="getStatusClass(data.item.status)" >{{getStatusText(data.item.status)}}</span>
         </template>
 		<template #cell(actions)="data">
 			<b-button
+				v-if="!isStatusArchived(data.item.status) && !isStatusConcluded(data.item.status)"
 				@click="concludeTask(data.item.id)"
 				variant="success"
 				class="btn-sm"
@@ -71,6 +78,7 @@
 				><i class="fas fa-check"></i>
 			</b-button>
 			<b-button
+				v-if="!isStatusArchived(data.item.status)"
 				@click="setTaskId(data.item.id)"
 				variant="primary"
 				v-b-modal.new-task-modal
@@ -79,10 +87,19 @@
 				><i class="far fa-edit"></i>
 			</b-button>
 			<b-button
+				v-if="!isStatusArchived(data.item.status) && !isStatusConcluded(data.item.status)"
 				@click="archiveTask(data.item.id)"
 				variant="warning"
 				class="btn-sm"
 				title="Arquivar"
+				><i class="fas fa-archive"></i>
+			</b-button>
+			<b-button
+				v-if="isStatusArchived(data.item.status)"
+				@click="activeTask(data.item.id)"
+				variant="success"
+				class="btn-sm"
+				title="Desarquivar"
 				><i class="fas fa-archive"></i>
 			</b-button>
 		</template>
@@ -109,7 +126,7 @@ export default {
 			perPage: 10,
 			fields: [
 				{
-					key: 'cod', 
+					key: 'cod_custom', 
 					label: 'Código'
 				},
 				{
@@ -121,7 +138,7 @@ export default {
 				// 	label: 'Descrição'
 				// },
 				{
-					key: 'created', 
+					key: 'created_custom', 
 					label: 'Data de cadastro'
 				},
 				{
@@ -175,13 +192,15 @@ export default {
 				centered: true
 			})
 			.then(value => {
-				axios.post('/api/task/conclude/'+id)
-					.then(res => {
-						this.getTasks();
-						this.makeToast('Sucesso!', 'Dados salvos com sucesso!', 'success');
-					}).catch(err => {
-						this.makeToast('Erro! '+err.response.status, err.response.data.message, 'danger');
-					})
+				if(value) {
+					axios.post('/api/task/conclude/'+id)
+						.then(res => {
+							this.getTasks();
+							this.makeToast('Sucesso!', 'Dados salvos com sucesso!', 'success');
+						}).catch(err => {
+							this.makeToast('Erro! '+err.response.status, err.response.data.message, 'danger');
+						})
+				}
 			})
 		},
 		archiveTask(id) {
@@ -197,14 +216,46 @@ export default {
 				centered: true
 			})
 			.then(value => {
-				axios.post('/api/task/archive/'+id)
+				if(value) {
+					axios.post('/api/task/archive/'+id)
 					.then(res => {
 						this.getTasks();
 						this.makeToast('Sucesso!', 'Dados salvos com sucesso!', 'success');
 					}).catch(err => {
 						this.makeToast('Erro! '+err.response.status, err.response.data.message, 'danger');
 					})
+				}
 			})
+		},
+		activeTask(id) {
+			this.$bvModal.msgBoxConfirm('Deseja mesmo dearquivar esta tarefa?', {
+				title: 'Confirme antes de prosseguir',
+				size: 'sm',
+				buttonSize: 'sm',
+				okVariant: 'warning',
+				okTitle: 'Confirmar',
+				cancelTitle: 'Cancelar',
+				footerClass: 'p-2',
+				hideHeaderClose: false,
+				centered: true
+			})
+			.then(value => {
+				if(value) {
+					axios.post('/api/task/active/'+id)
+					.then(res => {
+						this.getTasks();
+						this.makeToast('Sucesso!', 'Dados salvos com sucesso!', 'success');
+					}).catch(err => {
+						this.makeToast('Erro! '+err.response.status, err.response.data.message, 'danger');
+					})
+				}
+			})
+		},
+		isStatusArchived(status) {
+			return status == 3;
+		},
+		isStatusConcluded(status) {
+			return status == 2;
 		},
 		getTdClassByStatus(status) {
 			switch(status) {
@@ -227,7 +278,19 @@ export default {
 				default:
 					return '';
 			}
-		}
+		},
+		getStatusClass(status) {
+			switch (status) {
+				case 1:
+					return 'badge-primary';
+				case 2:
+					return 'badge-success';
+				case 3:
+					return 'badge-warning';
+				default:
+					return '';
+			}
+		},
 	}
 };
 </script>

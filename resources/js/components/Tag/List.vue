@@ -150,13 +150,15 @@ export default {
 				centered: true
 			})
 			.then(value => {
-				axios.post('/api/tag/delete/'+id)
-					.then(res => {
-						this.getTags();
-						this.makeToast('Sucesso!', 'Categoria excluida com sucesso!', 'success');
-					}).catch(err => {
-						this.makeToast('Erro!', 'Houve um problema ao tentar excluir a categoria!', 'danger');
-					})
+				if(value) {
+					axios.post('/api/tag/delete/'+id)
+						.then(res => {
+							this.getTags();
+							this.makeToast('Sucesso!', 'Categoria excluida com sucesso!', 'success');
+						}).catch(err => {
+							this.makeToast('Erro!', 'Houve um problema ao tentar excluir a categoria!', 'danger');
+						})
+				}
 			})
 		},
 		setViewMode(viewMode) {

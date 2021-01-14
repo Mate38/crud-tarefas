@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Generic\UserExclusive;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Tag extends Model
+class Tag extends UserExclusive
 {
 	use HasFactory, SoftDeletes;
 
@@ -22,9 +22,13 @@ class Tag extends Model
 		'created_at'
 	];
 
+	protected $hidden = [
+        'user_id',
+    ];
+
 	public function tasks()
     {
         return $this->belongsToMany(Task::class, TaskTag::getTableName());
-    }
+	}
 
 }

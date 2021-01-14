@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
@@ -23,7 +24,9 @@ class User extends Authenticatable
     // ];
 
     protected $fillable = [
-        'displayName', 'email', 'localId',
+        'displayName', 
+        'email', 
+        'localId',
     ];
 
     public function getAuthIdentifierName() {
@@ -52,4 +55,15 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public static function getTestUser() {
+        $user = new self([
+            'displayName' => 'TestUser',
+            'email' => 'test@test.com',
+            'localId' => '1234567890123456789012345678'
+        ]);
+        Auth::login($user);
+        return $user;
+    }
+
 }

@@ -3,11 +3,11 @@
 namespace App\Models;
 
 use App\Models\TaskTag;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Generic\UserExclusive;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Task extends Model
+class Task extends UserExclusive
 {
 	use HasFactory, SoftDeletes;
 
@@ -23,6 +23,10 @@ class Task extends Model
 	protected $dates = [
 		'created_at'
 	];
+
+	protected $hidden = [
+        'user_id',
+    ];
 
 	public function tags()
     {

@@ -29,7 +29,7 @@ class TagRequest extends FormRequest
         };
 
         return [
-            'cod' => ['required', $codRules, 'max:20', 'min:3'],
+            'cod' => $codRules,
             'title' => ['required', 'max:50', 'min:3'],
             'description' => ['max:100'],
         ];

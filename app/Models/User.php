@@ -56,11 +56,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public static function getTestUser() {
+    public static function setFakeUser() {
         $user = new self([
             'displayName' => 'TestUser',
             'email' => 'test@test.com',
-            'localId' => '1234567890123456789012345678'
+            'localId' => 'm280TBpG2Mgpt5nNMQF7REhLBRQ2'
         ]);
         Auth::login($user);
         return $user;

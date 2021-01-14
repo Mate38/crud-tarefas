@@ -39,6 +39,7 @@ Route::group(['middleware' => ['auth']], function () {
             Route::post('/list', 'TagController@list')->name('list');
             Route::post('/save/{tag?}', 'TagController@save')->name('save');
             Route::get('/options', 'TagController@options')->name('options');
+            Route::post('/delete/{tag}', 'TagController@delete')->name('delete');
 
             Route::get('/{tag}', 'TagController@tag')->name('tag');
         });

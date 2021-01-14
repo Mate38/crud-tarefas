@@ -22,7 +22,7 @@ class CreateTaskTagsTable extends Migration
             $table->foreign('tag_id')->references('id')->on('tag')->onDelete('cascade');
 
             $table->primary(['task_id', 'tag_id']);
-
+            $table->softDeletes();
         });
     }
 

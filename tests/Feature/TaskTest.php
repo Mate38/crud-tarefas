@@ -18,7 +18,7 @@ class TaskTest extends TestCase
         $this->post($route)->assertStatus(302);
 
         // $user = User::factory()->create();
-        $user = User::getTestUser();
+        $user = User::setFakeUser();
 
         // Autenticado
         $this->actingAs($user)->post($route)->assertStatus(200);
@@ -36,7 +36,7 @@ class TaskTest extends TestCase
     public function test_save()
     {
         $route = '/api/task/save';
-        $user = User::getTestUser();
+        $user = User::setFakeUser();
 
         // Cadastro
         $this->actingAs($user)->post($route, [
@@ -76,7 +76,7 @@ class TaskTest extends TestCase
     public function test_task()
     {
         $route = '/api/task/1';
-        $user = User::getTestUser();
+        $user = User::setFakeUser();
 
         $this->actingAs($user)->get($route)->assertStatus(200);
     }
@@ -84,7 +84,7 @@ class TaskTest extends TestCase
     public function test_conclude()
     {
         $route = '/api/task/conclude/1';
-        $user = User::getTestUser();
+        $user = User::setFakeUser();
 
         $this->actingAs($user)->get($route)->assertStatus(200);
     }
@@ -92,7 +92,7 @@ class TaskTest extends TestCase
     public function test_archive()
     {
         $route = '/api/task/archive/1';
-        $user = User::getTestUser();
+        $user = User::setFakeUser();
 
         $this->actingAs($user)->get($route)->assertStatus(200);
     }

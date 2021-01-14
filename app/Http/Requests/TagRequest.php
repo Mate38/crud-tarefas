@@ -40,6 +40,7 @@ class TagRequest extends FormRequest
             'required' => 'O campo é obrigatório',
             'max' => 'O valor informado deve ter no máximo :max caracteres',
             'min' => 'O valor informado deve ter no mínimo :min caracteres',
+            'unique' => 'O valor do código informado já existe',
         ]; 
     }
 }

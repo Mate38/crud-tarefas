@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Tag;
 use App\Services\Tag\SaveTag;
+use App\Services\Tag\DeleteTag;
 use App\Http\Requests\TagRequest;
 use App\Http\Resources\TagResource;
 use App\Http\Resources\TagsOptionsResource;
@@ -32,6 +33,12 @@ class TagController extends Controller
     {
         $tags = Tag::all();
         return TagsOptionsResource::collection($tags);
+    }
+
+    public function delete(Tag $tag)
+    {
+        $deleteTag = new DeleteTag($tag);
+        return response()->json($deleteTag->handle());
     }
 
 }

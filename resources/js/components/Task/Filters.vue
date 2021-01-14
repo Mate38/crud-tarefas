@@ -73,6 +73,9 @@
 						:options="tagsOptions"
 						multiple
 					></b-form-select>
+					<b-tooltip target="task_tags" triggers="hover">
+						Selecione com o Ctrl apertado para multipla seleção 
+					</b-tooltip>
 				</b-form-group>
 			</div>
 		</div>

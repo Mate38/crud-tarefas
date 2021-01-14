@@ -7,6 +7,8 @@
         @ok="handleOk"
         ok-title="Salvar"
         cancel-title="Cancelar"
+        :ok-disabled="viewMode"
+        :hide-footer="viewMode"
     >
         <div v-show="loading" class="text-center text-primary my-2">
             <b-spinner class="align-middle"></b-spinner>
@@ -23,6 +25,7 @@
                     id="tag_cod"
                     v-model="$v.form.cod.$model"
                     :state="validateState('cod')"
+                    :readonly="viewMode"
                 ></b-form-input>
             </b-form-group>
 
@@ -36,6 +39,7 @@
                     id="tag_title"
                     v-model="$v.form.title.$model"
                     :state="validateState('title')"
+                    :readonly="viewMode"
                 ></b-form-input>
             </b-form-group>
 
@@ -49,6 +53,7 @@
                     v-model="$v.form.description.$model"
                     :state="validateState('description')"
                     rows="3"
+                    :readonly="viewMode"
                 ></b-form-textarea>
             </b-form-group>
         </b-form>
@@ -73,6 +78,9 @@ export default {
     props: {
         tagId: {
             type: Number
+        },
+        viewMode: {
+            type: Boolean
         },
     },
     data() {
@@ -118,6 +126,11 @@ export default {
             this.handleSubmit();
         },
         handleSubmit() {
+
+            if(this.viewMode) {
+                return;
+            }
+
             this.$v.$touch();
 
             if (this.$v.$invalid) {
@@ -135,7 +148,13 @@ export default {
                     this.makeToast('Sucesso!', 'Dados salvos com sucesso!', 'success');
                     this.closeModal();
                 }).catch(err => {
-                    this.makeToast('Erro! '+err.response.status, err.response.data.message, 'danger');
+                    if(err.response.data.errors) {
+                        Object.entries(err.response.data.errors).forEach(error => {
+                            this.makeToast('Erro! '+err.response.status, error[1][0], 'danger');
+                        });
+                    } else {
+                        this.makeToast('Erro! '+err.response.status, err.response.data.message, 'danger');
+                    };
                 })
         },
         getTag(id) {

@@ -16,14 +16,14 @@ class TagTest extends TestCase
 
         $this->post($route)->assertStatus(302);
 
-        $user = User::getTestUser();
+        $user = User::setFakeUser();
         $this->actingAs($user)->post($route)->assertStatus(200);
     }
 
     public function test_save()
     {
         $route = '/api/tag/save';
-        $user = User::getTestUser();
+        $user = User::setFakeUser();
 
         // Cadastro
         $this->actingAs($user)->post($route, [
@@ -61,7 +61,7 @@ class TagTest extends TestCase
     public function test_tag()
     {
         $route = '/api/tag/1';
-        $user = User::getTestUser();
+        $user = User::setFakeUser();
 
         $this->actingAs($user)->get($route)->assertStatus(200);
     }
@@ -69,7 +69,15 @@ class TagTest extends TestCase
     public function test_options()
     {
         $route = '/api/tag/options/1';
-        $user = User::getTestUser();
+        $user = User::setFakeUser();
+
+        $this->actingAs($user)->get($route)->assertStatus(200);
+    }
+
+    public function test_delete()
+    {
+        $route = '/api/tag/delete/1';
+        $user = User::setFakeUser();
 
         $this->actingAs($user)->get($route)->assertStatus(200);
     }

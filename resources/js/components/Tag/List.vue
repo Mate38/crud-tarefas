@@ -16,6 +16,7 @@
 		@reloadTable="getTags"
 		@setTagId="setTagId"
 		:tagId="tagId"
+		:viewMode="viewMode"
 	></TagFormModal>
 
     <b-table 
@@ -40,12 +41,27 @@
         </template>
 		<template #cell(actions)="data">
 			<b-button
+				@click="setTagId(data.item.id, true)"
+				variant="success"
+				v-b-modal.new-tag-modal
+				class="btn-sm"
+				title="Visualizar"
+				><i class="far fa-eye"></i>
+			</b-button>
+			<b-button
 				@click="setTagId(data.item.id)"
 				variant="primary"
 				v-b-modal.new-tag-modal
 				class="btn-sm"
 				title="Editar"
 				><i class="far fa-edit"></i>
+			</b-button>
+			<b-button
+				@click="deleteTag(data.item.id)"
+				variant="danger"
+				class="btn-sm"
+				title="Excluir"
+				><i class="far fa-trash-alt"></i>
 			</b-button>
 		</template>
 	</b-table>
@@ -93,7 +109,8 @@ export default {
 			],
 			items: [],
 			tagId: null,
-			loading: false
+			loading: false,
+			viewMode: false
 		};
 	},
 	computed: {
@@ -116,8 +133,34 @@ export default {
 					this.loading = false;
 				})
 		},
-		setTagId(id) {
+		setTagId(id, viewMode = false) {
 			this.tagId = id;
+			this.setViewMode(viewMode);
+		},
+		deleteTag(id) {
+			this.$bvModal.msgBoxConfirm('Deseja mesmo excluir esta categoria?', {
+				title: 'Confirme antes de prosseguir',
+				size: 'sm',
+				buttonSize: 'sm',
+				okVariant: 'danger',
+				okTitle: 'Confirmar',
+				cancelTitle: 'Cancelar',
+				footerClass: 'p-2',
+				hideHeaderClose: false,
+				centered: true
+			})
+			.then(value => {
+				axios.post('/api/tag/delete/'+id)
+					.then(res => {
+						this.getTags();
+						this.makeToast('Sucesso!', 'Categoria excluida com sucesso!', 'success');
+					}).catch(err => {
+						this.makeToast('Erro!', 'Houve um problema ao tentar excluir a categoria!', 'danger');
+					})
+			})
+		},
+		setViewMode(viewMode) {
+			this.viewMode = viewMode;
 		}
 	}
 };
